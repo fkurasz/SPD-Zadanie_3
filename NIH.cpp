@@ -37,64 +37,71 @@ void LoadData(string nazwa, string dane, int* P, int* X)
     }
 }
 
-int Cmax(int N, int M, int* P, int* X)
+int Cmax(int N, int M, int *P, int *X)
 {
-    int Tab[100];
-
+    int T[100];
     for (int i = 0; i <= M; i++)
     {
-        Tab[i] = 0;
+        T[i]=0;
     }
-
-    for (int i = 0; i < N; i++)
+    for (int n = 0; n < N; n++)
     {
-        for (int j = 1; j <= M; j++)
+        for (int m = 1; m <= M; m++)
         {
-            Tab[j] = max(Tab[j], Tab[j - 1]) + P[(j - 1) + X[i] * M];
+            T[m]=max(T[m],T[m-1]) + P[(m-1)+X[n]*M];
         }
     }
-    return Tab[M];
+    
+    return T[M];
 }
 
-int NEH(int N, int M, int* P, int* X)
+int NEH(int N, int M, int *P, int *X)
 {
-    int* W = new int[N];
-
+    int *W = new int [N];
     for (int i = 0; i < N; i++)
     {
-        W[i] = Cmax(1, M, P, &i);
+        X[i]=i;
+        W[i]=Cmax(1,M,P,&i);
+    }
+    for (int i = 0; i < N-1; i++)
+    {   
+        for (int j = 0; j < N-1; j++)
+        {
+            if(W[j]<W[j+1])
+            {
+                swap(W[j],W[j+1]);
+                swap(X[j],X[j+1]);
+            }
+        }
     }
     delete[] W;
 
-
     for (int i = 0; i < N; i++)
     {
-        int bestP = -1;
-        int bestCmax = 999999999;
+        int bestP=-1;
+        int bestCmax=99999999;
 
         for (int j = i; j >= 0; j--)
         {
-            int tmp = Cmax(i + 1, M, P, X);
-
-            if (tmp <= bestCmax)
+            int tmp = Cmax(i+1,M,P,X);
+            if(bestCmax >= tmp)
             {
-                bestP = j;
-                bestCmax = tmp;
+                bestCmax=tmp;
+                bestP=j;
             }
-
-            if (j)
+            if(j)
             {
-                swap(X[j], X[j - 1]);
-            }
+                swap(X[j],X[j-1]);
+            } 
         }
-
-        for (int k = 0; k < bestP; k++)
+        for (int j = 0; j < bestP; j++)
         {
-            swap(X[k], X[k + 1]);
+            swap(X[j],X[j+1]);
         }
-
+        
     }
-    return Cmax(N, M, P, X);
+    
+    return Cmax(N,M,P,X);
 }
 
 int main()
@@ -106,7 +113,7 @@ int main()
     int x = 0;
     int P[10000], X[1000];
 
-    while(!plik.eof() || x > 120)
+    while(x < 121)
     {
         if (x < 10)
             dane = "data.00";
