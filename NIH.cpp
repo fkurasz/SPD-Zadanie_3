@@ -22,9 +22,8 @@ void LoadData(string nazwa, string dane, int* P, int* X)
     }
 
     plik >> N >> M;
-    int ilosc = N * M;
 
-    for (int i = 0; i < ilosc; i++)
+    for (int i = 0; i < N * M; i++)
     {
         plik >> P[i];
     }
